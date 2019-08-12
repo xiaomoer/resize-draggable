@@ -29,7 +29,7 @@ const ResizeDraggable = require('resize-draggable');
 
 `<ResizeDraggable>` component is placed between two elements. it will change these two elsement by dragging. You can also click the bar on it to expand/collapse the elements in the specified direction.
 
-See the [demo](./demo/index.html) for more.
+See the [demo](limoer.cc/resize-draggable) or [source](./demo/index.js) for more.
 ```js
 import React from 'react';
 import { render } from 'react-dom';
