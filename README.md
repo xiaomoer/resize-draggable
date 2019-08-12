@@ -33,7 +33,7 @@ See the [demo](./demo/index.html) for more.
 ```js
 import React from 'react';
 import { render } from 'react-dom';
-import Draggleable from '../dist/bundle';
+import Draggleable from 'resize-draggable';
 import './index.css';
 
 const App = () => (
