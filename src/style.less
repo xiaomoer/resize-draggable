@@ -1,0 +1,115 @@
+
+.resize-handle {
+  background: #e6e6e6;
+}
+
+.react-draggable-dragging {
+  z-index: 1;
+}
+
+.react-draggable-dragging-sibling {
+  pointer-events: none; // 不响应任何鼠标事件
+  user-select: none; // 不会被选中
+}
+
+.resize-handle-e,.resize-handle-w {
+  width: 10px;
+  height: 100%;
+  cursor: e-resize;
+}
+
+.resize-handle-button-w,.resize-handle-button-e {
+  cursor: pointer;
+  height: 30%;
+  min-height: 40px;
+  max-height: 110px;
+  width: 10px;
+  background-color: #c6c6c6;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  &::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 2px;
+    border: 6px solid transparent;
+    margin-top: -5px;
+  }
+  &:hover {
+    background:#999;
+  }
+}
+
+.resize-handle-button-w {
+  border-radius: 18px 2px 2px 18px;
+  &::after {
+    border-right-color: #666;
+    left:-4px;
+  }
+  &:hover::after {
+    border-right-color:#fff;
+  }
+}
+
+.resize-handle-button-e {
+  border-radius: 2px 18px 18px 2px;
+  &::after {
+    border-left-color: #666;
+  }
+  &:hover::after {
+    border-left-color:#fff;
+  }
+}
+
+.resize-handle-button-n,.resize-handle-button-s {
+  cursor: pointer;
+  height: 10px;
+  width: 50%;
+  max-width: 110px;
+  min-width: 40px;
+  background-color: #c6c6c6;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  &::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    left: 50%;
+    top: 2px;
+    border: 6px solid transparent;
+    margin-left: -5px;
+  }
+  &:hover {
+    background:#999;
+  }
+}
+
+.resize-handle-button-n {
+  border-radius: 18px 18px 2px 2px;
+  &::after {
+    border-bottom-color: #666;
+    top:-4px;
+  }
+  &:hover::after {
+    border-bottom-color:#fff;
+  }
+}
+
+.resize-handle-button-s {
+  border-radius: 2px 2px 18px 18px;
+  &::after {
+    border-top-color: #666;
+  }
+  &:hover::after {
+    border-top-color:#fff;
+  }
+}
+
+.resize-handle-n,.resize-handle-s {
+  width: 100%;
+  height: 10px;
+  cursor: n-resize;
+}
