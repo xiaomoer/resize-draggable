@@ -1,6 +1,6 @@
 {
   "name": "resize-draggable",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A React component that can be used for sizing by dragging",
   "homepage": "https://github.com/xiaomoer/resize-draggable",
   "bugs": "https://github.com/xiaomoer/resize-draggable/issues",
