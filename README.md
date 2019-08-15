@@ -1,3 +1,6 @@
+git remote add origion git@github.com:xiaomoer/resize-draggable.git
+git push -u origion master
+
 # resize-draggable
 
 A react component that can be used for sizing by dragging.
@@ -29,11 +32,11 @@ const ResizeDraggable = require('resize-draggable');
 
 `<ResizeDraggable>` component is placed between two elements. it will change these two elsement by dragging. You can also click the bar on it to expand/collapse the elements in the specified direction.
 
-See the [demo](limoer.cc/resize-draggable) or [source](./demo/index.js) for more.
+See the [demo](./demo/index.html) for more.
 ```js
 import React from 'react';
 import { render } from 'react-dom';
-import Draggleable from 'resize-draggable';
+import Draggleable from '../dist/bundle';
 import './index.css';
 
 const App = () => (
@@ -75,6 +78,12 @@ render(<App />, document.getElementById('root'));
   // show the expand/collapse bar or not, default is true
   closable: boolean,
 
+  // allow drag or not, default: false
+  dragDisabled: boolean,
+  
+  // Set to true if at least one of the prev element and the next element is adaptive(eg flex:1 or use % width/height). default: false
+  adaptive: boolean,
+
   // the expand/collapse bar closed or not init, default is false.
   defaultClosed: boolean,
   
@@ -85,7 +94,18 @@ render(<App />, document.getElementById('root'));
   // custom function trigger when size changed
   onResize: (e, { data, x, y }) => {...}
 
+  // custom function called when expand/collapse one element
+  onToggleClose: (e, prevElement, nextElement) => {...}
+
   // the expand/collapse toogle bar custom style.
   style: object,
 }
 ```
+
+## changeLog
+
+### v1.2.0
+
+* Support for dragging disabled. Use prop `dragDisabled`
+* Support for adaptive layout. For not unforeseen problems, set `adaptive` to true.
+* Fixed some bugs.
