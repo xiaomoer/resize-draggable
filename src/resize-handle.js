@@ -48,7 +48,6 @@ class ResizeHandle extends React.Component {
     this.toogleSize = 0;
     this.dragged = false;
     this.reiseHandle = React.createRef();
-    this.cleared = false;
   }
   componentDidMount() {
     const node = this.props.dragDisabled ? this.reiseHandle.current : findDOMNode(this.reiseHandle.current);
@@ -58,7 +57,7 @@ class ResizeHandle extends React.Component {
     window.addEventListener('resize', this.handleWindowResize);
   }
   handleWindowResize = () => {
-    if (this.dragged && !this.cleared) {
+    if (this.dragged) {
       const { preSibling, nextSibling } = this;
       const { direction } = this.props;
       const prop = direction === 'n' || direction === 's' ? ['height', 'clientHeight'] : ['width', 'clientWidth'];
@@ -70,19 +69,15 @@ class ResizeHandle extends React.Component {
       const nsl = Number(nextSibling.style[prop[0]].replace('px', ''));
       const pcl = preSibling[prop[1]];
       const ncl = nextSibling[prop[1]];
-      this.cleared = true;
-      if (psl !== pcl) {
-        console.log('run this prev');
+      if (psl !== 0 && psl !== pcl) {
         preSibling.style[prop[0]] = null;
       }
-      if (nsl !== ncl) {
-        console.log('run this next');
+      if (nsl !== 0 && nsl !== ncl) {
         nextSibling.style[prop[0]] = null;
       }
     }
   }
   handleStart = () => {
-    this.dragged = true;
     if (this.preSibling && this.nextSibling) {
       this.preSibling.classList.add(classDraggingSibling);
       this.nextSibling.classList.add(classDraggingSibling);
@@ -124,6 +119,8 @@ class ResizeHandle extends React.Component {
       n: y > 0,
       s: y < 0,
     };
+    // 已经拖拽过
+    this.dragged = true;
     // 由closeed状态到非closed状态
     if (closed && conditionMap[direction]) {
       this.setState({
