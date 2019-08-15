@@ -12,7 +12,12 @@ const App = () => (
     </div>
     <div className="container-v">
       <div className="prev">Prev Element</div>
-      <Draggleable direction="e" />
+      <Draggleable direction="w" dragDisabled />
+      <div className="next">Next Element</div>
+    </div>
+    <div className="container-v">
+      <div className="prev">Prev Element</div>
+      <Draggleable direction="e" adaptive />
       <div className="next">Next Element</div>
     </div>
     <div className="container-h">
@@ -28,4 +33,4 @@ const App = () => (
   </div>
 );
 
-render(<App />, document.getElementById('root'));
+render(<App />, document.body);
