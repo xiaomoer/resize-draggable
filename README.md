@@ -1,6 +1,3 @@
-git remote add origion git@github.com:xiaomoer/resize-draggable.git
-git push -u origion master
-
 # resize-draggable
 
 A react component that can be used for sizing by dragging.
