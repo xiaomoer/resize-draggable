@@ -1,7 +1,9 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Draggable from 'react-draggable';
+
 import './style.less';
 
 const DirectionMap = {
@@ -18,19 +20,23 @@ class ResizeHandle extends React.Component {
     direction: PropTypes.string.isRequired,
     closable: PropTypes.bool,
     onResize: PropTypes.func,
+    onToggleClose: PropTypes.func,
     defaultClosed: PropTypes.bool,
     defaultPosition: PropTypes.object,
     style: PropTypes.object,
-    // realTime: PropTypes.bool,
+    dragDisabled: PropTypes.bool,
+    adaptive: PropTypes.bool,
   }
 
   static defaultProps = {
     closable: true,
     onResize: null,
+    onToggleClose: null,
     defaultPosition: { x: 0, y: 0 },
     defaultClosed: false,
     style: {},
-    // realTime: false,
+    dragDisabled: false,
+    adaptive: false,
   };
 
   constructor(props) {
@@ -40,13 +46,43 @@ class ResizeHandle extends React.Component {
       position: props.defaultPosition,
     };
     this.toogleSize = 0;
+    this.dragged = false;
+    this.reiseHandle = React.createRef();
+    this.cleared = false;
   }
-
-  handleStart = (event, data) => {
-    const { node } = data;
+  componentDidMount() {
+    const node = this.props.dragDisabled ? this.reiseHandle.current : findDOMNode(this.reiseHandle.current);
     this.preSibling = node.previousElementSibling;
     this.nextSibling = node.nextElementSibling;
-    // resize的时候两边不可以被选中和响应事件
+    this.prevOverflow = getComputedStyle(this.preSibling).getPropertyValue('overflow');
+    window.addEventListener('resize', this.handleWindowResize);
+  }
+  handleWindowResize = () => {
+    if (this.dragged && !this.cleared) {
+      const { preSibling, nextSibling } = this;
+      const { direction } = this.props;
+      const prop = direction === 'n' || direction === 's' ? ['height', 'clientHeight'] : ['width', 'clientWidth'];
+      // psl: prevSibling style length
+      // nsl: nextSibling style length
+      // pcl: prevSibling computed length
+      // ncl: nextSibling computed length
+      const psl = Number(preSibling.style[prop[0]].replace('px', ''));
+      const nsl = Number(nextSibling.style[prop[0]].replace('px', ''));
+      const pcl = preSibling[prop[1]];
+      const ncl = nextSibling[prop[1]];
+      this.cleared = true;
+      if (psl !== pcl) {
+        console.log('run this prev');
+        preSibling.style[prop[0]] = null;
+      }
+      if (nsl !== ncl) {
+        console.log('run this next');
+        nextSibling.style[prop[0]] = null;
+      }
+    }
+  }
+  handleStart = () => {
+    this.dragged = true;
     if (this.preSibling && this.nextSibling) {
       this.preSibling.classList.add(classDraggingSibling);
       this.nextSibling.classList.add(classDraggingSibling);
@@ -62,6 +98,7 @@ class ResizeHandle extends React.Component {
   }
   handleResize = (event, data) => {
     const { node, x, y } = data;
+    if (x === 0 && y === 0) return; // 此时如果该方法触发，但是没有位移，则为点击了展开和关闭按钮
     const { direction, onResize } = this.props;
     const { closed } = this.state;
     const { preSibling, nextSibling } = this;
@@ -80,8 +117,15 @@ class ResizeHandle extends React.Component {
         nextSibling.style.width = `${w2 - x}px`;
       }
     }
+    // 用于判断是否由展开到关闭
+    const conditionMap = {
+      e: x < 0,
+      w: x > 0,
+      n: y > 0,
+      s: y < 0,
+    };
     // 由closeed状态到非closed状态
-    if (closed && (x > 0 || y > 0)) {
+    if (closed && conditionMap[direction]) {
       this.setState({
         closed: false,
       });
@@ -91,101 +135,82 @@ class ResizeHandle extends React.Component {
       onResize(event, { node, x, y });
     }
   }
-  // handleDrag = (event, data) => {
-  //   this.handleResize(event, data);
-  // }
-  handleToogle = (e) => {
-    const { direction, onResize } = this.props;
+  toggleWithDirection = () => {
+    const { direction, adaptive } = this.props;
     const { closed } = this.state;
-    const { node } = this;
     const { preSibling, nextSibling } = this;
-    let x = 0,
-      y = 0;
-    if (preSibling && nextSibling) {
-      const { width: pw, height: ph } = preSibling.getBoundingClientRect();
-      const { width: nw, height: nh } = nextSibling.getBoundingClientRect();
-      switch (direction) {
-        case 'n': // 向上
-          if (closed) {
-            // 从关闭到展开
-            y = -this.toogleSize;
-            preSibling.style.height = `${this.toogleSize}px`;
-            nextSibling.style.height = `${nh - this.toogleSize}px`;
-          } else {
-            // 展开到关闭 设置展开/关闭的高度
-            this.toogleSize = ph;
-            y = this.toogleSize;
-            preSibling.style.height = '0px';
-            nextSibling.style.height = `${nh + this.toogleSize}px`;
-          }
-          break;
-        case 's': // 向下
-          if (closed) {
-            // 关闭到向上展开
-            y = this.toogleSize;
-            nextSibling.style.height = `${this.toogleSize}px`;
-            preSibling.style.height = `${ph - this.toogleSize}px`;
-          } else {
-            this.toogleSize = nh;
-            y = -this.toogleSize;
-            nextSibling.style.height = '0px';
-            preSibling.style.height = `${ph + this.toogleSize}px`;
-          }
-          break;
-        case 'w': // 向左
-          if (closed) {
-            x = this.toogleSize;
-            preSibling.style.width = `${this.toogleSize}px`;
-            nextSibling.style.width = `${nw - this.toogleSize}px`;
-          } else {
-            this.toogleSize = pw;
-            x = -this.toogleSize;
-            preSibling.style.width = '0px';
-            nextSibling.style.width = `${nw + this.toogleSize}px`;
-          }
-          break;
-        case 'e': // 向右
-          if (closed) {
-            x = -this.toogleSize;
-            nextSibling.style.width = `${this.toogleSize}px`;
-            preSibling.style.width = `${pw - this.toogleSize}px`;
-          } else {
-            this.toogleSize = nw;
-            x = this.toogleSize;
-            nextSibling.style.width = '0px';
-            preSibling.style.width = `${pw + this.toogleSize}px`;
-          }
-          break;
-        default:
-          break;
+    const prop = direction === 'n' || direction === 's' ? 'height' : 'width';
+    const { width: pw, height: ph } = preSibling.getBoundingClientRect();
+    const { width: nw, height: nh } = nextSibling.getBoundingClientRect();
+    // 方位和使用到的size映射
+    const obj = {
+      n: [nh, ph],
+      s: [ph, nh],
+      w: [nw, pw],
+      e: [pw, nw],
+    };
+    const prev = ['n', 'w'].includes(direction) ? preSibling : nextSibling;
+    const next = ['n', 'w'].includes(direction) ? nextSibling : preSibling;
+    if (closed) {
+      // 关闭到展开
+      prev.style[prop] = `${this.toogleSize}px`;
+      prev.style.overflow = this.prevOverflow; // 使用其默认的overflow
+      if (!adaptive) {
+        next.style[prop] = `${obj[direction][0] - this.toogleSize}px`;
       }
+    } else {
+      this.toogleSize = obj[direction][1];
+      prev.style[prop] = '0px';
+      prev.style.overflow = 'hidden';
+      if (!adaptive) {
+        next.style[prop] = `${obj[direction][0] + this.toogleSize}px`;
+      }
+    }
+  }
+  handleToogle = (e) => {
+    const { onToggleClose } = this.props;
+    const { closed } = this.state;
+    const { preSibling, nextSibling } = this;
+    if (preSibling && nextSibling) {
+      this.toggleWithDirection();
       this.setState({
         closed: !closed,
       });
 
-      if (typeof onResize === 'function') {
-        onResize(e, { node, x, y });
+      if (typeof onToggleClose === 'function') {
+        onToggleClose(e, preSibling, nextSibling);
       }
     }
   }
   render() {
     const { closed, position } = this.state;
     const {
-      direction, closable, style, realTime
+      direction, closable, style, dragDisabled,
     } = this.props;
     let toogleDir = direction;
     if (closed) toogleDir = DirectionMap[toogleDir];
-    const toogleBarCls = classNames('resize-handle', { 'resize-handle-closed': closed }, `resize-handle-${direction}`);
-    // let prop = {};
-    // if (realTime) {
-    //   props.onDrag = this.handleDrag;
-    // }
-    return (
+    const toogleBarCls = classNames(
+      'resize-handle',
+      { 'resize-handle-closed': closed }, `resize-handle-${direction}`,
+      { 'resize-handle-no-drag': dragDisabled }
+    );
+    return dragDisabled ? (
+      <div
+        className={toogleBarCls}
+        style={style}
+        ref={this.reiseHandle}
+      >
+        {
+          closable && <span onClick={this.handleToogle} className={`resize-handle-button-${toogleDir}`} />
+        }
+      </div>
+    ) : (
       <Draggable
         axis={direction === 'n' || direction === 's' ? 'y' : 'x'}
         onStart={this.handleStart}
         onStop={this.handleStop}
         position={position}
+        ref={this.reiseHandle}
       >
         <div
           className={toogleBarCls}
@@ -201,4 +226,3 @@ class ResizeHandle extends React.Component {
 }
 
 export default ResizeHandle;
-
