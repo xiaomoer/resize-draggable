@@ -49,13 +49,18 @@ class ResizeHandle extends React.Component {
     this.dragged = false;
     this.reiseHandle = React.createRef();
   }
+
   componentDidMount() {
+    const { adaptive } = this.props;
     const node = this.props.dragDisabled ? this.reiseHandle.current : findDOMNode(this.reiseHandle.current);
     this.preSibling = node.previousElementSibling;
     this.nextSibling = node.nextElementSibling;
     this.prevOverflow = getComputedStyle(this.preSibling).getPropertyValue('overflow');
-    window.addEventListener('resize', this.handleWindowResize);
+    if (adaptive) {
+      window.addEventListener('resize', this.handleWindowResize);
+    }
   }
+
   handleWindowResize = () => {
     if (this.dragged) {
       const { preSibling, nextSibling } = this;
@@ -77,12 +82,14 @@ class ResizeHandle extends React.Component {
       }
     }
   }
+
   handleStart = () => {
     if (this.preSibling && this.nextSibling) {
       this.preSibling.classList.add(classDraggingSibling);
       this.nextSibling.classList.add(classDraggingSibling);
     }
   }
+
   handleStop = (event, data) => {
     const { preSibling, nextSibling } = this;
     if (preSibling && nextSibling) {
@@ -91,6 +98,7 @@ class ResizeHandle extends React.Component {
     }
     this.handleResize(event, data);
   }
+
   handleResize = (event, data) => {
     const { node, x, y } = data;
     if (x === 0 && y === 0) return; // 此时如果该方法触发，但是没有位移，则为点击了展开和关闭按钮
@@ -132,6 +140,7 @@ class ResizeHandle extends React.Component {
       onResize(event, { node, x, y });
     }
   }
+
   toggleWithDirection = () => {
     const { direction, adaptive } = this.props;
     const { closed } = this.state;
@@ -164,6 +173,7 @@ class ResizeHandle extends React.Component {
       }
     }
   }
+
   handleToogle = (e) => {
     const { onToggleClose } = this.props;
     const { closed } = this.state;
@@ -179,6 +189,7 @@ class ResizeHandle extends React.Component {
       }
     }
   }
+
   render() {
     const { closed, position } = this.state;
     const {
