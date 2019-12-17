@@ -21,9 +21,11 @@ $ yarn add resize-draggable
 ```js
 // es6
 import ResizeDraggable from 'resize-draggable'
+import 'resize-draggable/dist/main.css'
 
 // CommonJS
 const ResizeDraggable = require('resize-draggable');
+require('resize-draggable/dist/main.css')
 ```
 ## <ResizeDraggable>
 
@@ -33,7 +35,8 @@ See the [demo](https://limoer.cc/resize-draggable) for more.
 ```js
 import React from 'react';
 import { render } from 'react-dom';
-import Draggleable from '../dist/bundle';
+import Draggleable from 'resize-draggable';
+import 'resize-draggable/dist/main.css';
 import './index.css';
 
 const App = () => (
@@ -73,36 +76,28 @@ render(<App />, document.getElementById('root'));
   direction: 'e' || 'w' || 'n' || 's',
   
   // show the expand/collapse bar or not, default is true
-  closable: boolean,
+  closable?: boolean,
 
   // allow drag or not, default: false
-  dragDisabled: boolean,
+  dragDisabled?: boolean,
   
-  // Set to true if at least one of the prev element and the next element is adaptive(eg flex:1 or use % width/height). default: false
-  adaptive: boolean,
+  // Set to true if the opposite direction element is adaptive(eg flex:1 or use % width/height). default: false
+  adaptive?: boolean,
 
   // the expand/collapse bar closed or not init, default is false.
-  defaultClosed: boolean,
+  defaultClosed?: boolean,
   
   // the draggable element default position, default { x: 0, y: 0 }
   // more about the prop, see: https://www.npmjs.com/package/react-draggable
-  defaultPosition: object,
+  defaultPosition?: object,
 
   // custom function trigger when size changed
-  onResize: (e, { data, x, y }) => {...}
+  onResize?: (e, { data, x, y }) => {...}
 
   // custom function called when expand/collapse one element
-  onToggleClose: (e, prevElement, nextElement) => {...}
+  onToggleClose?: (e, prevElement, nextElement) => {...}
 
   // custom style of this component
-  style: object,
+  style?: object,
 }
 ```
-
-## changeLog
-
-### v1.2.0
-
-* Support for dragging disabled. Use prop `dragDisabled`
-* Support for adaptive layout. For not unforeseen problems, set `adaptive` to true.
-* Fixed some bugs.
