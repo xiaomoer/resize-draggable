@@ -1,40 +1,41 @@
 # resize-draggable
 
-A react component that can be used for sizing by dragging.
+[English](README-en.md)
 
-```html
-<div>
-  <div style={{ width: 100 }}></div>
-  <ResizeDraggable direction="e" />
-  <div style={{ width: 100 }}></div>
-</div>
-```
+> 一个可以通过拖拽分割天来改变大小（展开/关闭）的 React 组件
 
-## Install
+## 安装
 
 ```bash
 $ yarn add resize-draggable
 ```
 
-## Usage
+## 使用
 
 ```js
-// es6
+import React from "react";
 import ResizeDraggable from "resize-draggable";
-import "resize-draggable/dist/main.css";
+import "resize-draggable/dist/main.css"; // 必须导入样式
 
-// CommonJS
-const ResizeDraggable = require("resize-draggable");
-require("resize-draggable/dist/main.css");
+const App = () => (
+  <div>
+    <div style={{ width: 100 }}></div>
+    <ResizeDraggable direction="e" />
+    <div style={{ width: 100 }}></div>
+  </div>
+);
+
+export default App;
 ```
 
-## <ResizeDraggable>
+## <ResizeDraggable>组件
 
-`<ResizeDraggable>` component is placed between two elements. it will change these two elsement by dragging. You can also click the bar on it to expand/collapse the elements in the specified direction.
+`<ResizeDraggable>` 放在两个元素之间，在视觉上，显示成一个带展开和关闭按钮的分隔条。通过拖拽该分隔条，可以改变其两侧元素的尺寸（注：由于性能原因，尺寸的更改将在拖拽完毕进行）。与此同时，还可点击分隔条上的按钮在特定方向上快速展开/关闭一侧内容。
 
-See the [demo](http://212.64.77.74:8080) for more.
+点击[demo](http://212.64.77.74:8080)体验和了解更多。
 
 ```js
+// demo
 import React from "react";
 import { render } from "react-dom";
 import Draggleable from "resize-draggable";
@@ -69,38 +70,38 @@ const App = () => (
 render(<App />, document.getElementById("root"));
 ```
 
-## <ResizeDraggable> props
+## <ResizeDraggable> 属性
 
 ```js
 {
-  // the expand/collapse bar direction, also decided the axis of the draggable
-  // east west north south
-  // if direction is 'n' or 's', the `axis` is 'y'
+  // 分割条上展开/关闭按钮的方向
+  // 可选值 东(e) 南(s) 西（w）北（n）
+  // 默认情况下，属性`axis`为'x'，如果设置`direction`为`s`或`n`，则`axis`为`y`
   direction: 'e' || 'w' || 'n' || 's',
 
-  // show the expand/collapse bar or not, default is true
+  // 设置展开关闭是否可用，默认为`true`
   closable?: boolean,
 
-  // allow drag or not, default: false
+  // 设置分割条是否可拖拽，默认为`false`，表示可以拖拽
   dragDisabled?: boolean,
 
-  // Set to true if the opposite direction element is adaptive(eg flex:1 or use % width/height). default: false
+  // 如果分隔条两边至少有一侧尺寸是自适应的（例如：flex：1的元素，百分比的宽高等），那么请设置`adaptive`为true，默认为`false`
   adaptive?: boolean,
 
-  // the expand/collapse bar closed or not init, default is false.
+  // 设置展开/关闭按钮默认情况下是否是关闭的，默认为false
   defaultClosed?: boolean,
 
-  // the draggable element default position, default { x: 0, y: 0 }
-  // more about the prop, see: https://www.npmjs.com/package/react-draggable
+  // 分隔条默认的位置偏移，默认为`{ x: 0, y: 0 }`
+  // 关于该属性的更多描述，见：https://www.npmjs.com/package/react-draggable
   defaultPosition?: object,
 
-  // custom function trigger when size changed
+  // 当拖动分隔条改变尺寸后触发
   onResize?: (e, { data, x, y }) => {...}
 
-  // custom function called when expand/collapse one element
+  // 当点击 分隔条上的展开/关闭按钮后触发
   onToggleClose?: (e, prevElement, nextElement) => {...}
 
-  // custom style of this component
+  // 自定义样式
   style?: object,
 }
 ```
