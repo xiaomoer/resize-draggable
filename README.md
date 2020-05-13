@@ -20,24 +20,26 @@ $ yarn add resize-draggable
 
 ```js
 // es6
-import ResizeDraggable from 'resize-draggable'
-import 'resize-draggable/dist/main.css'
+import ResizeDraggable from "resize-draggable";
+import "resize-draggable/dist/main.css";
 
 // CommonJS
-const ResizeDraggable = require('resize-draggable');
-require('resize-draggable/dist/main.css')
+const ResizeDraggable = require("resize-draggable");
+require("resize-draggable/dist/main.css");
 ```
+
 ## <ResizeDraggable>
 
 `<ResizeDraggable>` component is placed between two elements. it will change these two elsement by dragging. You can also click the bar on it to expand/collapse the elements in the specified direction.
 
-See the [demo](https://limoer.cc/resize-draggable) for more.
+See the [demo](212.64.77.74:8080) for more.
+
 ```js
-import React from 'react';
-import { render } from 'react-dom';
-import Draggleable from 'resize-draggable';
-import 'resize-draggable/dist/main.css';
-import './index.css';
+import React from "react";
+import { render } from "react-dom";
+import Draggleable from "resize-draggable";
+import "resize-draggable/dist/main.css";
+import "./index.css";
 
 const App = () => (
   <div>
@@ -64,8 +66,9 @@ const App = () => (
   </div>
 );
 
-render(<App />, document.getElementById('root'));
+render(<App />, document.getElementById("root"));
 ```
+
 ## <ResizeDraggable> props
 
 ```js
@@ -74,19 +77,19 @@ render(<App />, document.getElementById('root'));
   // east west north south
   // if direction is 'n' or 's', the `axis` is 'y'
   direction: 'e' || 'w' || 'n' || 's',
-  
+
   // show the expand/collapse bar or not, default is true
   closable?: boolean,
 
   // allow drag or not, default: false
   dragDisabled?: boolean,
-  
+
   // Set to true if the opposite direction element is adaptive(eg flex:1 or use % width/height). default: false
   adaptive?: boolean,
 
   // the expand/collapse bar closed or not init, default is false.
   defaultClosed?: boolean,
-  
+
   // the draggable element default position, default { x: 0, y: 0 }
   // more about the prop, see: https://www.npmjs.com/package/react-draggable
   defaultPosition?: object,
