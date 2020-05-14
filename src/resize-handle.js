@@ -1,19 +1,19 @@
-import React from 'react';
-import { findDOMNode } from 'react-dom';
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import Draggable from 'react-draggable';
+import React from "react";
+import { findDOMNode } from "react-dom";
+import classNames from "classnames";
+import PropTypes from "prop-types";
+import Draggable from "react-draggable";
 
-import './style.less';
+import "./style.less";
 
 const DirectionMap = {
-  n: 's',
-  s: 'n',
-  w: 'e',
-  e: 'w',
+  n: "s",
+  s: "n",
+  w: "e",
+  e: "w",
 };
 
-const classDraggingSibling = 'react-draggable-dragging-sibling';
+const classDraggingSibling = "react-draggable-dragging-sibling";
 
 class ResizeHandle extends React.Component {
   static propTypes = {
@@ -26,7 +26,7 @@ class ResizeHandle extends React.Component {
     style: PropTypes.object,
     dragDisabled: PropTypes.bool,
     adaptive: PropTypes.bool,
-  }
+  };
 
   static defaultProps = {
     closable: true,
@@ -49,15 +49,35 @@ class ResizeHandle extends React.Component {
     this.dragged = false;
     this.reiseHandle = React.createRef();
   }
-
+  changeSibligDisplay() {
+    if (getComputedStyle(this.parentNode).display === "flex") {
+      return;
+    }
+    this.preSibling.classList.add("inline-block-box");
+    this.nextSibling.classList.add("inline-block-box");
+  }
+  setSize(node) {
+    const { direction } = this.props;
+    if (!["e", "w"].includes(direction)) {
+      return;
+    }
+    node.style.height = getComputedStyle(this.parentNode).height;
+  }
   componentDidMount() {
     const { adaptive } = this.props;
-    const node = this.props.dragDisabled ? this.reiseHandle.current : findDOMNode(this.reiseHandle.current);
+    const node = this.props.dragDisabled
+      ? this.reiseHandle.current
+      : findDOMNode(this.reiseHandle.current);
+    this.parentNode = node.parentElement;
     this.preSibling = node.previousElementSibling;
     this.nextSibling = node.nextElementSibling;
-    this.prevOverflow = getComputedStyle(this.preSibling).getPropertyValue('overflow');
+    this.prevOverflow = getComputedStyle(this.preSibling).getPropertyValue(
+      "overflow"
+    );
+    this.changeSibligDisplay();
+    this.setSize(node);
     if (adaptive) {
-      window.addEventListener('resize', this.handleWindowResize);
+      window.addEventListener("resize", this.handleWindowResize);
     }
   }
 
@@ -65,13 +85,16 @@ class ResizeHandle extends React.Component {
     if (this.dragged) {
       const { preSibling, nextSibling } = this;
       const { direction } = this.props;
-      const prop = direction === 'n' || direction === 's' ? ['height', 'clientHeight'] : ['width', 'clientWidth'];
+      const prop =
+        direction === "n" || direction === "s"
+          ? ["height", "clientHeight"]
+          : ["width", "clientWidth"];
       // psl: prevSibling style length
       // nsl: nextSibling style length
       // pcl: prevSibling computed length
       // ncl: nextSibling computed length
-      const psl = Number(preSibling.style[prop[0]].replace('px', ''));
-      const nsl = Number(nextSibling.style[prop[0]].replace('px', ''));
+      const psl = Number(preSibling.style[prop[0]].replace("px", ""));
+      const nsl = Number(nextSibling.style[prop[0]].replace("px", ""));
       const pcl = preSibling[prop[1]];
       const ncl = nextSibling[prop[1]];
       if (psl !== 0 && psl !== pcl) {
@@ -81,14 +104,14 @@ class ResizeHandle extends React.Component {
         nextSibling.style[prop[0]] = null;
       }
     }
-  }
+  };
 
   handleStart = () => {
     if (this.preSibling && this.nextSibling) {
       this.preSibling.classList.add(classDraggingSibling);
       this.nextSibling.classList.add(classDraggingSibling);
     }
-  }
+  };
 
   handleStop = (event, data) => {
     const { preSibling, nextSibling } = this;
@@ -97,7 +120,7 @@ class ResizeHandle extends React.Component {
       nextSibling.classList.remove(classDraggingSibling);
     }
     this.handleResize(event, data);
-  }
+  };
 
   handleResize = (event, data) => {
     const { node, x, y } = data;
@@ -107,7 +130,7 @@ class ResizeHandle extends React.Component {
     const { preSibling, nextSibling } = this;
     if (preSibling && nextSibling) {
       // resize-bar横向分隔
-      if (direction === 'n' || direction === 's') {
+      if (direction === "n" || direction === "s") {
         const h = preSibling.getBoundingClientRect().height;
         const h2 = nextSibling.getBoundingClientRect().height;
         preSibling.style.height = `${h + y}px`;
@@ -136,16 +159,16 @@ class ResizeHandle extends React.Component {
       });
     }
     // 执行自定义的resize函数
-    if (typeof onResize === 'function') {
+    if (typeof onResize === "function") {
       onResize(event, { node, x, y });
     }
-  }
+  };
 
   toggleWithDirection = () => {
     const { direction, adaptive } = this.props;
     const { closed } = this.state;
     const { preSibling, nextSibling } = this;
-    const prop = direction === 'n' || direction === 's' ? 'height' : 'width';
+    const prop = direction === "n" || direction === "s" ? "height" : "width";
     const { width: pw, height: ph } = preSibling.getBoundingClientRect();
     const { width: nw, height: nh } = nextSibling.getBoundingClientRect();
     // 方位和使用到的size映射
@@ -155,8 +178,8 @@ class ResizeHandle extends React.Component {
       w: [nw, pw],
       e: [pw, nw],
     };
-    const prev = ['n', 'w'].includes(direction) ? preSibling : nextSibling;
-    const next = ['n', 'w'].includes(direction) ? nextSibling : preSibling;
+    const prev = ["n", "w"].includes(direction) ? preSibling : nextSibling;
+    const next = ["n", "w"].includes(direction) ? nextSibling : preSibling;
     if (closed) {
       // 关闭到展开
       prev.style[prop] = `${this.toogleSize}px`;
@@ -166,13 +189,13 @@ class ResizeHandle extends React.Component {
       }
     } else {
       this.toogleSize = obj[direction][1];
-      prev.style[prop] = '0px';
-      prev.style.overflow = 'hidden';
+      prev.style[prop] = "0px";
+      prev.style.overflow = "hidden";
       if (!adaptive) {
         next.style[prop] = `${obj[direction][0] + this.toogleSize}px`;
       }
     }
-  }
+  };
 
   handleToogle = (e) => {
     const { onToggleClose } = this.props;
@@ -184,49 +207,47 @@ class ResizeHandle extends React.Component {
         closed: !closed,
       });
 
-      if (typeof onToggleClose === 'function') {
+      if (typeof onToggleClose === "function") {
         onToggleClose(e, preSibling, nextSibling);
       }
     }
-  }
+  };
 
   render() {
     const { closed, position } = this.state;
-    const {
-      direction, closable, style, dragDisabled,
-    } = this.props;
+    const { direction, closable, style, dragDisabled } = this.props;
     let toogleDir = direction;
     if (closed) toogleDir = DirectionMap[toogleDir];
     const toogleBarCls = classNames(
-      'resize-handle',
-      { 'resize-handle-closed': closed }, `resize-handle-${direction}`,
-      { 'resize-handle-no-drag': dragDisabled }
+      "resize-handle",
+      { "resize-handle-closed": closed },
+      `resize-handle-${direction}`,
+      { "resize-handle-no-drag": dragDisabled }
     );
     return dragDisabled ? (
-      <div
-        className={toogleBarCls}
-        style={style}
-        ref={this.reiseHandle}
-      >
-        {
-          closable && <span onClick={this.handleToogle} className={`resize-handle-button-${toogleDir}`} />
-        }
+      <div className={toogleBarCls} style={style} ref={this.reiseHandle}>
+        {closable && (
+          <span
+            onClick={this.handleToogle}
+            className={`resize-handle-button-${toogleDir}`}
+          />
+        )}
       </div>
     ) : (
       <Draggable
-        axis={direction === 'n' || direction === 's' ? 'y' : 'x'}
+        axis={direction === "n" || direction === "s" ? "y" : "x"}
         onStart={this.handleStart}
         onStop={this.handleStop}
         position={position}
         ref={this.reiseHandle}
       >
-        <div
-          className={toogleBarCls}
-          style={style}
-        >
-          {
-            closable && <span onClick={this.handleToogle} className={`resize-handle-button-${toogleDir}`} />
-          }
+        <div className={toogleBarCls} style={style}>
+          {closable && (
+            <span
+              onClick={this.handleToogle}
+              className={`resize-handle-button-${toogleDir}`}
+            />
+          )}
         </div>
       </Draggable>
     );

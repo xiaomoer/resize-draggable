@@ -1,6 +1,7 @@
 .resize-handle {
   background: #e6e6e6;
   position: relative;
+  display: inline-block;
 }
 .resize-handle-no-drag {
   cursor: not-allowed !important;
@@ -15,7 +16,6 @@
 .resize-handle-e,
 .resize-handle-w {
   width: 10px;
-  height: 100%;
   cursor: e-resize;
 }
 .resize-handle-w {
@@ -31,11 +31,12 @@
   background-color: #c6c6c6;
   position: absolute;
   top: 50%;
+  left: 0;
   transform: translateY(-50%);
 }
 .resize-handle-button-w::after,
 .resize-handle-button-e::after {
-  content: '';
+  content: "";
   display: inline-block;
   position: absolute;
   top: 50%;
@@ -75,12 +76,13 @@
   min-width: 40px;
   background-color: #c6c6c6;
   position: absolute;
+  left: 0;
   left: 50%;
   transform: translate(-50%);
 }
 .resize-handle-button-n::after,
 .resize-handle-button-s::after {
-  content: '';
+  content: "";
   display: inline-block;
   position: absolute;
   left: 50%;
@@ -119,6 +121,9 @@
 }
 .resize-handle-s {
   cursor: s-resize;
+}
+.inline-block-box {
+  display: inline-block;
 }
 
 

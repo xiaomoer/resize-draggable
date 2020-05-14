@@ -1,11 +1,11 @@
-
 .resize-handle {
   background: #e6e6e6;
   position: relative;
+  display: inline-block;
 }
 
 .resize-handle-no-drag {
-  cursor: not-allowed!important;
+  cursor: not-allowed !important;
 }
 
 .react-draggable-dragging {
@@ -17,16 +17,18 @@
   user-select: none; // 不会被选中
 }
 
-.resize-handle-e,.resize-handle-w {
+.resize-handle-e,
+.resize-handle-w {
   width: 10px;
-  height: 100%;
+  // height: 100%;
   cursor: e-resize;
 }
 .resize-handle-w {
   cursor: w-resize;
 }
 
-.resize-handle-button-w,.resize-handle-button-e {
+.resize-handle-button-w,
+.resize-handle-button-e {
   cursor: pointer;
   height: 30%;
   min-height: 40px;
@@ -35,9 +37,10 @@
   background-color: #c6c6c6;
   position: absolute;
   top: 50%;
+  left: 0;
   transform: translateY(-50%);
   &::after {
-    content: '';
+    content: "";
     display: inline-block;
     position: absolute;
     top: 50%;
@@ -46,7 +49,7 @@
     margin-top: -5px;
   }
   &:hover {
-    background:#999;
+    background: #999;
   }
 }
 
@@ -54,10 +57,10 @@
   border-radius: 18px 2px 2px 18px;
   &::after {
     border-right-color: #666;
-    left:-4px;
+    left: -4px;
   }
   &:hover::after {
-    border-right-color:#fff;
+    border-right-color: #fff;
   }
 }
 
@@ -67,11 +70,12 @@
     border-left-color: #666;
   }
   &:hover::after {
-    border-left-color:#fff;
+    border-left-color: #fff;
   }
 }
 
-.resize-handle-button-n,.resize-handle-button-s {
+.resize-handle-button-n,
+.resize-handle-button-s {
   cursor: pointer;
   height: 10px;
   width: 50%;
@@ -79,10 +83,11 @@
   min-width: 40px;
   background-color: #c6c6c6;
   position: absolute;
+  left: 0;
   left: 50%;
   transform: translate(-50%);
   &::after {
-    content: '';
+    content: "";
     display: inline-block;
     position: absolute;
     left: 50%;
@@ -91,7 +96,7 @@
     margin-left: -5px;
   }
   &:hover {
-    background:#999;
+    background: #999;
   }
 }
 
@@ -99,10 +104,10 @@
   border-radius: 18px 18px 2px 2px;
   &::after {
     border-bottom-color: #666;
-    top:-4px;
+    top: -4px;
   }
   &:hover::after {
-    border-bottom-color:#fff;
+    border-bottom-color: #fff;
   }
 }
 
@@ -112,15 +117,20 @@
     border-top-color: #666;
   }
   &:hover::after {
-    border-top-color:#fff;
+    border-top-color: #fff;
   }
 }
 
-.resize-handle-n,.resize-handle-s {
+.resize-handle-n,
+.resize-handle-s {
   width: 100%;
   height: 10px;
   cursor: n-resize;
 }
 .resize-handle-s {
   cursor: s-resize;
+}
+
+.inline-block-box {
+  display: inline-block;
 }
