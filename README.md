@@ -13,9 +13,9 @@ $ yarn add resize-draggable
 ## 使用
 
 ```js
-import React from "react";
-import ResizeDraggable from "resize-draggable";
-import "resize-draggable/dist/main.css"; // 必须导入样式
+import React from 'react'
+import ResizeDraggable from 'resize-draggable'
+import 'resize-draggable/dist/main.css' // 必须导入样式
 
 const App = () => (
   <div>
@@ -23,24 +23,24 @@ const App = () => (
     <ResizeDraggable direction="e" />
     <div style={{ width: 100 }}></div>
   </div>
-);
+)
 
-export default App;
+export default App
 ```
 
 ## <ResizeDraggable>组件
 
 `<ResizeDraggable>` 放在两个元素之间，在视觉上，显示成一个带展开和关闭按钮的分隔条。通过拖拽该分隔条，可以改变其两侧元素的尺寸（注：由于性能原因，尺寸的更改将在拖拽完毕进行）。与此同时，还可点击分隔条上的按钮在特定方向上快速展开/关闭一侧内容。
 
-点击[demo](http://212.64.77.74:8080)体验和了解更多。
+点击[demo](http://212.64.77.74:8080/resizedraggable/index.html)体验和了解更多。
 
 ```js
 // demo
-import React from "react";
-import { render } from "react-dom";
-import Draggleable from "resize-draggable";
-import "resize-draggable/dist/main.css";
-import "./index.css";
+import React from 'react'
+import { render } from 'react-dom'
+import Draggleable from 'resize-draggable'
+import 'resize-draggable/dist/main.css'
+import './index.css'
 
 const App = () => (
   <div>
@@ -65,9 +65,9 @@ const App = () => (
       <div className="next-h">Next Element</div>
     </div>
   </div>
-);
+)
 
-render(<App />, document.getElementById("root"));
+render(<App />, document.getElementById('root'))
 ```
 
 ## <ResizeDraggable> 属性
